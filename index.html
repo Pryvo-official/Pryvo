@@ -9,7 +9,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
   <style>
-    /* reset & base */
     * {
       margin: 0;
       padding: 0;
@@ -32,7 +31,6 @@
       background-color: #000000;
     }
 
-    /* main container – full viewport */
     .landing {
       flex: 1;
       display: flex;
@@ -46,7 +44,6 @@
       background: #000000;
     }
 
-    /* subtle monochrome geometric texture (very faint white lines) */
     .landing::before {
       content: "";
       position: absolute;
@@ -59,7 +56,6 @@
       z-index: 0;
     }
 
-    /* soft monochrome orbs (white / light gray glows) */
     .glow {
       position: absolute;
       border-radius: 50%;
@@ -96,7 +92,6 @@
       filter: blur(100px);
     }
 
-    /* brand logo — fixed to top left corner, right at the top */
     .brand-logo {
       position: absolute;
       top: 0;
@@ -116,7 +111,6 @@
       opacity: 1;
     }
 
-    /* content layer — centered */
     .content {
       position: relative;
       z-index: 2;
@@ -127,7 +121,6 @@
       align-items: center;
     }
 
-    /* tagline / supporting line */
     .tagline {
       font-size: clamp(1rem, 3.5vw, 1.35rem);
       font-weight: 400;
@@ -146,7 +139,6 @@
       transition: opacity 0.4s ease;
     }
 
-    /* countdown — single line, no wrapping */
     .countdown {
       display: flex;
       flex-wrap: nowrap;
@@ -193,7 +185,6 @@
       white-space: nowrap;
     }
 
-    /* separator colons between countdown items */
     .countdown-sep {
       font-size: clamp(1.6rem, 5.5vw, 4.5rem);
       font-weight: 300;
@@ -206,7 +197,6 @@
       flex: 0 0 auto;
     }
 
-    /* call-to-action — inverted: white bg, black text */
     .cta {
       display: inline-flex;
       align-items: center;
@@ -247,7 +237,6 @@
       transform: translateX(3px);
     }
 
-    /* minimal footer / meta line — white with opacity */
     .meta {
       font-size: 0.8rem;
       letter-spacing: 0.3px;
@@ -277,7 +266,6 @@
       opacity: 0.7;
     }
 
-    /* ── info box (bottom right, blurred & transparent) ── */
     .info-box {
       position: fixed;
       bottom: 1.5rem;
@@ -308,7 +296,6 @@
       transform: translateY(-2px);
     }
 
-    /* the label — always visible */
     .info-box .info-label {
       display: block;
       font-size: 0.72rem;
@@ -319,20 +306,17 @@
       transition: opacity 0.2s ease;
     }
 
-    /* expandable content — hidden until open */
     .info-box .info-content {
       max-height: 0;
       opacity: 0;
       overflow: hidden;
       transition: max-height 0.5s ease, opacity 0.4s ease, margin-top 0.4s ease;
       margin-top: 0;
-      /* allow text selection inside */
       user-select: text;
       -webkit-user-select: text;
       cursor: text;
     }
 
-    /* open state — bigger panel */
     .info-box.open {
       max-width: 440px;
       padding: 1.25rem 1.4rem 1.1rem;
@@ -346,7 +330,6 @@
       margin-top: 0.85rem;
     }
 
-    /* animated X close button */
     .info-close {
       position: absolute;
       top: 0.65rem;
@@ -397,7 +380,6 @@
       stroke: #ffffff;
     }
 
-    /* content typography inside the box */
     .info-box .info-content h3 {
       font-size: 0.95rem;
       font-weight: 600;
@@ -436,13 +418,11 @@
       margin: 0.9rem 0;
     }
 
-    /* selection inside the info box */
     .info-box .info-content ::selection {
       background: #ffffff;
       color: #000000;
     }
 
-    /* responsive tweaks */
     @media (max-width: 640px) {
       .countdown {
         gap: 0.4rem;
@@ -508,7 +488,6 @@
       }
     }
 
-    /* focus visibility for accessibility */
     .cta:focus-visible {
       outline: 2px solid #ffffff;
       outline-offset: 4px;
@@ -524,7 +503,6 @@
       outline-offset: 2px;
     }
 
-    /* selection color for contrast */
     ::selection {
       background: #ffffff;
       color: #000000;
@@ -533,12 +511,10 @@
 </head>
 <body>
   <main class="landing">
-    <!-- ambient monochrome glows -->
     <div class="glow glow-1"></div>
     <div class="glow glow-2"></div>
     <div class="glow glow-3"></div>
 
-    <!-- brand logo pinned top-left (image) -->
     <img 
       src="https://raw.githubusercontent.com/Pryvo-official/Pryvo/main/Pryvo_Logo.png" 
       alt="pryvo" 
@@ -546,12 +522,10 @@
     >
 
     <div class="content">
-      <!-- supporting statement (dynamic) -->
       <p class="tagline" id="tagline">
         Launching in ...
       </p>
 
-      <!-- countdown timer — all on one line -->
       <div class="countdown" id="countdown">
         <div class="countdown-item">
           <div class="countdown-number" id="days">00</div>
@@ -574,12 +548,10 @@
         </div>
       </div>
 
-      <!-- a gentle call to action -->
       <a href="#" class="cta" role="button" aria-label="Notify me">
         Notify me <span>→</span>
       </a>
 
-      <!-- minimalist footer detail -->
       <div class="meta">
         <span>pryvo</span>
         <span class="dot"></span>
@@ -589,7 +561,6 @@
       </div>
     </div>
 
-    <!-- small blurred transparent info box (bottom right) — click to expand -->
     <div class="info-box" id="infoBox" role="button" tabindex="0" aria-expanded="false" aria-label="Toggle information">
       <span class="info-label">INFO</span>
       <div class="info-content">
@@ -614,7 +585,6 @@
         <div class="divider"></div>
       </div>
 
-      <!-- animated X close button -->
       <button class="info-close" id="infoClose" aria-label="Close info" type="button">
         <svg viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
           <line x1="1" y1="1" x2="11" y2="11" />
@@ -625,39 +595,30 @@
   </main>
 
   <script>
-    // Fixed target date: July 30, 2027
     const targetDate = new Date(2027, 6, 30, 0, 0, 0); // month is 0-indexed (6 = July)
 
-    // Grab DOM elements
     const daysEl = document.getElementById('days');
     const hoursEl = document.getElementById('hours');
     const minutesEl = document.getElementById('minutes');
     const secondsEl = document.getElementById('seconds');
     const taglineEl = document.getElementById('tagline');
 
-    // Pad numbers to 2 digits
     function pad(n) {
       return String(n).padStart(2, '0');
     }
 
-    // Track the last tagline so we only update the DOM when it actually changes
     let lastTagline = '';
 
-    // Update the tagline based on how far away the launch is
     function updateTagline(daysRemaining) {
       let newTagline;
 
       if (daysRemaining > 60) {
-        // More than 2 months out — "Coming in ..."
         newTagline = 'Coming in ...';
       } else if (daysRemaining > 10) {
-        // Between 2 months and 10 days — still "Coming in ..."
         newTagline = 'Coming in ...';
       } else if (daysRemaining > 1) {
-        // 10 days or fewer — "Launching soon ..."
         newTagline = 'Launching soon ...';
       } else {
-        // 1 day or less — "Launching in ..."
         newTagline = 'Launching in ...';
       }
 
@@ -671,7 +632,6 @@
       }
     }
 
-    // Update the countdown
     function updateCountdown() {
       const now = new Date().getTime();
       const distance = targetDate.getTime() - now;
@@ -698,11 +658,9 @@
       updateTagline(days);
     }
 
-    // Initial call + update every second
     updateCountdown();
     setInterval(updateCountdown, 1000);
 
-    // Info box toggle
     const infoBox = document.getElementById('infoBox');
     const infoClose = document.getElementById('infoClose');
 
@@ -716,26 +674,22 @@
       infoBox.setAttribute('aria-expanded', 'false');
     }
 
-    // Open when clicking anywhere on the collapsed box
     infoBox.addEventListener('click', function () {
       if (!infoBox.classList.contains('open')) {
         openInfo();
       }
     });
 
-    // Close when clicking the X button
     infoClose.addEventListener('click', function (e) {
       e.stopPropagation();
       closeInfo();
     });
 
-    // Prevent clicks inside the content from closing/reopening
     const infoContent = infoBox.querySelector('.info-content');
     infoContent.addEventListener('click', function (e) {
       e.stopPropagation();
     });
 
-    // Keyboard support on collapsed box
     infoBox.addEventListener('keydown', function (e) {
       if ((e.key === 'Enter' || e.key === ' ') && !infoBox.classList.contains('open')) {
         e.preventDefault();
@@ -743,7 +697,6 @@
       }
     });
 
-    // Keyboard support on X button
     infoClose.addEventListener('keydown', function (e) {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
