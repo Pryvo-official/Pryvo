@@ -775,7 +775,7 @@
       }
     });
 
-    /* ---------- Interactive grid ripple effect ---------- */
+    /* ---------- Interactive grid ripple effect with top-left start ---------- */
     (function() {
       const grid = document.getElementById('gridSquares');
       if (!grid) return;
@@ -897,6 +897,20 @@
       grid.addEventListener('mouseleave', () => {
         stopHoverTimer();
       });
+
+      // ---- AUTO-START RIPPLE FROM TOP-LEFT ON PAGE LOAD ----
+      // Use a small delay to ensure the grid is fully laid out and dimensions are available.
+      window.addEventListener('load', function() {
+        // Wait a tiny bit for the grid to settle (especially on slower devices)
+        setTimeout(function() {
+          // The first cell (index 0) is at the top-left corner of the grid.
+          const topLeftCell = cells[0];
+          if (topLeftCell) {
+            triggerCircularWave(topLeftCell);
+          }
+        }, 150); // slight delay for smoothness
+      });
+
     })();
   </script>
 </body>
