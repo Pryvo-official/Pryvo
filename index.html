@@ -177,6 +177,7 @@
       pointer-events: auto;
     }
 
+    /* Tagline keeps its rounded pill shape */
     .tagline {
       font-size: clamp(1rem, 3.5vw, 1.35rem);
       font-weight: 400;
@@ -261,6 +262,7 @@
       flex: 0 0 auto;
     }
 
+    /* Slightly rounded CTA button */
     .cta {
       display: inline-flex;
       align-items: center;
@@ -270,7 +272,7 @@
       font-weight: 500;
       font-size: 1.05rem;
       padding: 0.9rem 2.2rem;
-      border-radius: 60px;
+      border-radius: 12px;
       text-decoration: none;
       letter-spacing: -0.01em;
       transition: all 0.2s ease;
@@ -330,6 +332,7 @@
       opacity: 0.7;
     }
 
+    /* Slightly rounded info box */
     .info-box {
       position: fixed;
       bottom: 1.5rem;
@@ -338,7 +341,7 @@
       padding: 0.75rem 1.1rem;
       background: rgba(255, 255, 255, 0.06);
       border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 16px;
+      border-radius: 12px;
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
@@ -394,13 +397,14 @@
       margin-top: 0.85rem;
     }
 
+    /* Square close button */
     .info-close {
       position: absolute;
       top: 0.65rem;
       right: 0.65rem;
       width: 26px;
       height: 26px;
-      border-radius: 50%;
+      border-radius: 0;
       background: rgba(255, 255, 255, 0.08);
       border: 1px solid rgba(255, 255, 255, 0.18);
       display: none;
@@ -487,13 +491,313 @@
       color: #000000;
     }
 
-    @media (max-width: 640px) {
-      .countdown {
-        gap: 0.4rem;
-      }
-      .countdown-sep {
-        font-size: clamp(1.2rem, 4.5vw, 2.5rem);
-      }
+    /* ---- Notify Modal (square) ---- */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal {
+      background: #0a0a0a;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 0;
+      padding: 2.5rem 2rem 2rem;
+      max-width: 440px;
+      width: 100%;
+      position: relative;
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6);
+      transform: translateY(16px) scale(0.98);
+      transition: transform 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    .modal-overlay.open .modal {
+      transform: translateY(0) scale(1);
+    }
+
+    /* Square modal close */
+    .modal-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      width: 32px;
+      height: 32px;
+      border-radius: 0;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.25s ease, border-color 0.2s ease;
+      padding: 0;
+      outline: none;
+    }
+
+    .modal-close:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.3);
+      transform: rotate(90deg) scale(1.08);
+    }
+
+    .modal-close:active {
+      transform: rotate(90deg) scale(0.95);
+    }
+
+    .modal-close svg {
+      width: 14px;
+      height: 14px;
+      display: block;
+      pointer-events: none;
+    }
+
+    .modal-close svg line {
+      stroke: #ffffff;
+      stroke-width: 2;
+      stroke-linecap: round;
+    }
+
+    .modal h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+      color: #ffffff;
+    }
+
+    .modal .modal-sub {
+      font-size: 0.9rem;
+      opacity: 0.6;
+      margin-bottom: 1.75rem;
+      line-height: 1.5;
+    }
+
+    .modal form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .modal .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      text-align: left;
+    }
+
+    .modal .input-group label {
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      opacity: 0.55;
+    }
+
+    /* Square input */
+    .modal .input-group input {
+      width: 100%;
+      padding: 0.9rem 1.1rem;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 0;
+      color: #ffffff;
+      font-family: inherit;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .modal .input-group input::placeholder {
+      color: rgba(255, 255, 255, 0.35);
+    }
+
+    .modal .input-group input:focus {
+      border-color: rgba(255, 255, 255, 0.5);
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.08);
+    }
+
+    .modal .input-group input.error {
+      border-color: #ff4d4d;
+      box-shadow: 0 0 0 3px rgba(255, 77, 77, 0.15);
+    }
+
+    .modal .error-message {
+      font-size: 0.75rem;
+      color: #ff4d4d;
+      display: none;
+      margin-top: 0.1rem;
+    }
+
+    .modal .error-message.visible {
+      display: block;
+    }
+
+    /* Square submit */
+    .modal .submit-btn {
+      width: 100%;
+      padding: 1rem;
+      background: #ffffff;
+      color: #000000;
+      border: none;
+      border-radius: 0;
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+      margin-top: 0.25rem;
+      box-shadow: 0 8px 24px -8px rgba(255, 255, 255, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .modal .submit-btn:hover {
+      background: #e0e0e0;
+      transform: translateY(-1px);
+      box-shadow: 0 12px 28px -8px rgba(255, 255, 255, 0.3);
+    }
+
+    .modal .submit-btn:active {
+      transform: translateY(0);
+    }
+
+    .modal .submit-btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .modal .submit-btn .btn-spinner {
+      display: none;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(0, 0, 0, 0.2);
+      border-top-color: #000000;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+
+    .modal .submit-btn.loading .btn-spinner {
+      display: block;
+    }
+
+    .modal .submit-btn.loading .btn-text {
+      opacity: 0.6;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .modal .modal-success {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 1rem 0;
+    }
+
+    .modal .modal-success.visible {
+      display: flex;
+    }
+
+    /* Square success icon */
+    .modal .success-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 0;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.25rem;
+      animation: popIn 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0.5); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .modal .success-icon svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .modal .success-icon svg polyline {
+      stroke: #ffffff;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+      stroke-dasharray: 30;
+      stroke-dashoffset: 30;
+      animation: drawCheck 0.5s 0.2s ease forwards;
+    }
+
+    @keyframes drawCheck {
+      to { stroke-dashoffset: 0; }
+    }
+
+    .modal .modal-success h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+      color: #ffffff;
+    }
+
+    .modal .modal-success p {
+      font-size: 0.85rem;
+      opacity: 0.6;
+      line-height: 1.5;
+      margin-bottom: 1.5rem;
+    }
+
+    .modal .modal-success p strong {
+      color: #ffffff;
+      opacity: 0.9;
+      font-weight: 500;
+    }
+
+    /* Square done button */
+    .modal .modal-success .done-btn {
+      padding: 0.75rem 2rem;
+      background: rgba(255, 255, 255, 0.08);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 0;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s ease, border-color 0.2s ease;
+    }
+
+    .modal .modal-success .done-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.3);
     }
 
     @media (max-width: 480px) {
@@ -554,6 +858,12 @@
         width: 24px;
         height: 24px;
       }
+      .modal {
+        padding: 2rem 1.5rem 1.5rem;
+      }
+      .modal h2 {
+        font-size: 1.25rem;
+      }
     }
 
     .cta:focus-visible {
@@ -569,6 +879,25 @@
     .info-close:focus-visible {
       outline: 2px solid #ffffff;
       outline-offset: 2px;
+    }
+
+    .modal-close:focus-visible {
+      outline: 2px solid #ffffff;
+      outline-offset: 2px;
+    }
+
+    .modal .submit-btn:focus-visible {
+      outline: 2px solid #ffffff;
+      outline-offset: 3px;
+    }
+
+    .modal .input-group input:focus-visible {
+      outline: none;
+    }
+
+    .modal .done-btn:focus-visible {
+      outline: 2px solid #ffffff;
+      outline-offset: 3px;
     }
 
     ::selection {
@@ -619,9 +948,9 @@
         </div>
       </div>
 
-      <a href="#" class="cta" role="button" aria-label="Notify me">
+      <button class="cta" id="notifyBtn" type="button" aria-label="Notify me">
         Notify me <span>→</span>
-      </a>
+      </button>
     </div>
 
     <div class="info-box" id="infoBox" role="button" tabindex="0" aria-expanded="false" aria-label="Toggle information">
@@ -656,6 +985,55 @@
       </button>
     </div>
   </main>
+
+  <!-- ---- Notify Modal ---- -->
+  <div class="modal-overlay" id="notifyModal" role="dialog" aria-modal="true" aria-labelledby="notifyTitle">
+    <div class="modal">
+      <button class="modal-close" id="modalClose" aria-label="Close" type="button">
+        <svg viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
+          <line x1="1" y1="1" x2="11" y2="11" />
+          <line x1="11" y1="1" x2="1" y2="11" />
+        </svg>
+      </button>
+
+      <!-- Form view -->
+      <div class="modal-form" id="modalForm">
+        <h2 id="notifyTitle">Get notified</h2>
+        <p class="modal-sub">Be the first to know when Pryvo launches. No spam — just one email on launch day.</p>
+
+        <form id="notifyForm" novalidate>
+          <div class="input-group">
+            <label for="emailInput">Email address</label>
+            <input 
+              type="email" 
+              id="emailInput" 
+              name="email" 
+              placeholder="you@example.com" 
+              autocomplete="email"
+              required
+            >
+            <span class="error-message" id="emailError">Please enter a valid email address.</span>
+          </div>
+          <button type="submit" class="submit-btn" id="submitBtn">
+            <span class="btn-spinner"></span>
+            <span class="btn-text">Notify me</span>
+          </button>
+        </form>
+      </div>
+
+      <!-- Success view -->
+      <div class="modal-success" id="modalSuccess">
+        <div class="success-icon">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <polyline points="4,12 10,18 20,6" />
+          </svg>
+        </div>
+        <h3>You're on the list!</h3>
+        <p>We'll send a single email to <strong id="successEmail">your email</strong> the moment Pryvo goes live. No spam, ever.</p>
+        <button class="done-btn" id="doneBtn" type="button">Done</button>
+      </div>
+    </div>
+  </div>
 
   <script>
     // Fixed launch instant: 30 July 2027, 00:00 UTC (so every visitor sees the same moment)
@@ -774,6 +1152,143 @@
         closeInfo();
       }
     });
+
+    /* ---------- Notify Modal Logic ---------- */
+    (function() {
+      const notifyBtn = document.getElementById('notifyBtn');
+      const notifyModal = document.getElementById('notifyModal');
+      const modalClose = document.getElementById('modalClose');
+      const modalForm = document.getElementById('modalForm');
+      const modalSuccess = document.getElementById('modalSuccess');
+      const notifyForm = document.getElementById('notifyForm');
+      const emailInput = document.getElementById('emailInput');
+      const emailError = document.getElementById('emailError');
+      const submitBtn = document.getElementById('submitBtn');
+      const doneBtn = document.getElementById('doneBtn');
+      const successEmail = document.getElementById('successEmail');
+
+      // Open modal
+      function openModal() {
+        notifyModal.classList.add('open');
+        document.body.style.overflow = 'hidden';
+        // Reset to form view
+        modalForm.style.display = 'block';
+        modalSuccess.classList.remove('visible');
+        notifyForm.reset();
+        emailInput.classList.remove('error');
+        emailError.classList.remove('visible');
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('loading');
+        // Focus the email input after the transition
+        setTimeout(function() {
+          emailInput.focus();
+        }, 350);
+      }
+
+      // Close modal
+      function closeModal() {
+        notifyModal.classList.remove('open');
+        document.body.style.overflow = '';
+      }
+
+      notifyBtn.addEventListener('click', openModal);
+
+      modalClose.addEventListener('click', closeModal);
+
+      // Close on overlay click (but not on modal itself)
+      notifyModal.addEventListener('click', function(e) {
+        if (e.target === notifyModal) {
+          closeModal();
+        }
+      });
+
+      // Close on Escape key
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && notifyModal.classList.contains('open')) {
+          closeModal();
+        }
+      });
+
+      // Email validation
+      function isValidEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+      }
+
+      // Form submit
+      notifyForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const email = emailInput.value.trim();
+
+        // Validate
+        if (!email || !isValidEmail(email)) {
+          emailInput.classList.add('error');
+          emailError.classList.add('visible');
+          emailInput.focus();
+          return;
+        }
+
+        emailInput.classList.remove('error');
+        emailError.classList.remove('visible');
+
+        // Show loading state
+        submitBtn.classList.add('loading');
+        submitBtn.disabled = true;
+
+        // Simulate a network request (store in localStorage)
+        setTimeout(function() {
+          // Store the email locally so the user can see it was saved
+          try {
+            const existing = JSON.parse(localStorage.getItem('pryvo_notify_list') || '[]');
+            if (!existing.includes(email)) {
+              existing.push(email);
+              localStorage.setItem('pryvo_notify_list', JSON.stringify(existing));
+            }
+            // Also store a simple flag
+            localStorage.setItem('pryvo_notified', 'true');
+          } catch (err) {
+            // localStorage might be unavailable — that's fine, still show success
+          }
+
+          // Show success view
+          successEmail.textContent = email;
+          modalForm.style.display = 'none';
+          modalSuccess.classList.add('visible');
+          submitBtn.classList.remove('loading');
+          submitBtn.disabled = false;
+
+          // Focus the done button for accessibility
+          setTimeout(function() {
+            doneBtn.focus();
+          }, 100);
+        }, 800);
+      });
+
+      // Clear error on input
+      emailInput.addEventListener('input', function() {
+        if (emailInput.classList.contains('error')) {
+          emailInput.classList.remove('error');
+          emailError.classList.remove('visible');
+        }
+      });
+
+      // Done button closes modal
+      doneBtn.addEventListener('click', closeModal);
+
+      // If the user already signed up, update the button text on load
+      try {
+        if (localStorage.getItem('pryvo_notified') === 'true') {
+          const arrowSpan = notifyBtn.querySelector('span');
+          notifyBtn.childNodes[0].textContent = 'You\u2019re on the list ';
+          if (arrowSpan) {
+            arrowSpan.textContent = '\u2713';
+          }
+        }
+      } catch (err) {
+        // ignore
+      }
+    })();
 
     /* ---------- Interactive grid ripple effect with top-left start ---------- */
     (function() {
@@ -899,16 +1414,13 @@
       });
 
       // ---- AUTO-START RIPPLE FROM TOP-LEFT ON PAGE LOAD ----
-      // Use a small delay to ensure the grid is fully laid out and dimensions are available.
       window.addEventListener('load', function() {
-        // Wait a tiny bit for the grid to settle (especially on slower devices)
         setTimeout(function() {
-          // The first cell (index 0) is at the top-left corner of the grid.
           const topLeftCell = cells[0];
           if (topLeftCell) {
             triggerCircularWave(topLeftCell);
           }
-        }, 150); // slight delay for smoothness
+        }, 150);
       });
 
     })();
