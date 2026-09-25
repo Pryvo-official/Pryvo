@@ -46,16 +46,64 @@
       background: #000000;
     }
 
-    .landing::before {
-      content: "";
+    /* ---- interactive grid squares (ripple) ---- */
+    .grid-squares {
       position: absolute;
       inset: 0;
-      background-image: 
-        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-      background-size: 48px 48px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(38px, 1fr));
+      grid-auto-rows: 38px;
       pointer-events: none;
       z-index: 0;
+      opacity: 0.9;
+    }
+
+    .grid-squares .cell {
+      background: rgba(255, 255, 255, 0.03);
+      border-right: 1px solid rgba(255, 255, 255, 0.02);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+      transition: background-color 0.5s cubic-bezier(0.23, 1, 0.32, 1),
+                  box-shadow 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+      will-change: background-color, box-shadow;
+      pointer-events: auto;
+      cursor: default;
+    }
+
+    /* smooth fill to white on hover */
+    .grid-squares .cell:hover {
+      background-color: #ffffff;
+      box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.5);
+      transition: background-color 0.3s ease-out, box-shadow 0.3s ease-out;
+    }
+
+    /* ---- thin circular ring wave animation ---- */
+    @keyframes ringPulse {
+      0% {
+        background-color: rgba(255, 255, 255, 0.03);
+        box-shadow: inset 0 0 0 rgba(255, 255, 255, 0);
+        border-color: rgba(255, 255, 255, 0.02);
+      }
+      15% {
+        background-color: rgba(255, 255, 255, 0.15);
+        box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.4),
+                    0 0 4px rgba(255, 255, 255, 0.3);
+        border-color: rgba(255, 255, 255, 0.6);
+      }
+      35% {
+        background-color: rgba(255, 255, 255, 0.05);
+        box-shadow: inset 0 0 2px rgba(255, 255, 255, 0.1),
+                    0 0 1px rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.15);
+      }
+      100% {
+        background-color: rgba(255, 255, 255, 0.03);
+        box-shadow: inset 0 0 0 rgba(255, 255, 255, 0);
+        border-color: rgba(255, 255, 255, 0.02);
+      }
+    }
+
+    .grid-squares .cell.wave {
+      animation: ringPulse 1.8s ease-out forwards;
     }
 
     .glow {
@@ -106,6 +154,7 @@
       user-select: none;
       filter: brightness(1) contrast(1);
       opacity: 0.95;
+      pointer-events: auto;
     }
 
     .brand-logo:hover {
@@ -121,6 +170,11 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      pointer-events: none;
+    }
+
+    .content > * {
+      pointer-events: auto;
     }
 
     .tagline {
@@ -139,6 +193,14 @@
       border: 1px solid rgba(255, 255, 255, 0.1);
       user-select: none;
       transition: opacity 0.4s ease;
+    }
+
+    .landing {
+      transition: opacity 0.9s ease;
+    }
+
+    body.launching .landing {
+      opacity: 0;
     }
 
     .countdown {
@@ -443,6 +505,10 @@
         left: 1rem;
         height: 3rem;
       }
+      .grid-squares {
+        grid-template-columns: repeat(auto-fill, minmax(32px, 1fr));
+        grid-auto-rows: 32px;
+      }
       .tagline {
         margin-bottom: 2.5rem;
         padding: 0.25rem 0.9rem;
@@ -513,6 +579,9 @@
 </head>
 <body>
   <main class="landing">
+    <!-- interactive grid squares (ripple) -->
+    <div class="grid-squares" id="gridSquares"></div>
+
     <div class="glow glow-1"></div>
     <div class="glow glow-2"></div>
     <div class="glow glow-3"></div>
@@ -589,7 +658,8 @@
   </main>
 
   <script>
-    const targetDate = new Date(2027, 6, 30, 0, 0, 0); // month is 0-indexed (6 = July)
+    // Fixed launch instant: 30 July 2027, 00:00 UTC (so every visitor sees the same moment)
+    const targetDate = new Date(Date.UTC(2027, 6, 30, 0, 0, 0));
 
     const daysEl = document.getElementById('days');
     const hoursEl = document.getElementById('hours');
@@ -609,9 +679,9 @@
       if (daysRemaining > 60) {
         newTagline = 'Coming in ...';
       } else if (daysRemaining > 10) {
-        newTagline = 'Coming in ...';
-      } else if (daysRemaining > 1) {
         newTagline = 'Launching soon ...';
+      } else if (daysRemaining > 1) {
+        newTagline = 'Final countdown ...';
       } else {
         newTagline = 'Launching in ...';
       }
@@ -635,7 +705,13 @@
         hoursEl.textContent = '00';
         minutesEl.textContent = '00';
         secondsEl.textContent = '00';
-        updateTagline(0);
+        clearInterval(timer);
+        document.body.classList.add('launching');
+        taglineEl.textContent = 'We\u2019re live!';
+        taglineEl.style.opacity = '0.85';
+        setTimeout(function () {
+          window.location.href = 'index.html';
+        }, 1200);
         return;
       }
 
@@ -652,8 +728,9 @@
       updateTagline(days);
     }
 
+    let timer;
     updateCountdown();
-    setInterval(updateCountdown, 1000);
+    timer = setInterval(updateCountdown, 1000);
 
     const infoBox = document.getElementById('infoBox');
     const infoClose = document.getElementById('infoClose');
@@ -697,6 +774,130 @@
         closeInfo();
       }
     });
+
+    /* ---------- Interactive grid ripple effect ---------- */
+    (function() {
+      const grid = document.getElementById('gridSquares');
+      if (!grid) return;
+
+      const CELL_COUNT = 900;
+      const cells = [];
+      let waveInterval = null;
+      let hoverTimer = null;
+      let currentHoveredCell = null;
+
+      // Create cells
+      for (let i = 0; i < CELL_COUNT; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'cell';
+        cell.dataset.index = i;
+        grid.appendChild(cell);
+        cells.push(cell);
+      }
+
+      // Get grid dimensions dynamically
+      function getGridDimensions() {
+        const style = window.getComputedStyle(grid);
+        const cols = style.gridTemplateColumns.split(' ').length;
+        const rows = Math.ceil(cells.length / cols);
+        return { cols, rows };
+      }
+
+      // Trigger circular ring wave from a specific cell
+      function triggerCircularWave(originCell) {
+        cells.forEach(c => {
+          c.classList.remove('wave');
+          c.style.animationDelay = '';
+        });
+
+        void grid.offsetWidth;
+
+        const originIndex = parseInt(originCell.dataset.index);
+        const { cols, rows } = getGridDimensions();
+
+        const originRow = Math.floor(originIndex / cols);
+        const originCol = originIndex % cols;
+
+        cells.forEach((cell, index) => {
+          const row = Math.floor(index / cols);
+          const col = index % cols;
+
+          const dist = Math.sqrt(
+            Math.pow(row - originRow, 2) + Math.pow(col - originCol, 2)
+          );
+
+          const delay = dist * 0.06;
+
+          cell.style.animationDelay = `${delay}s`;
+          cell.classList.add('wave');
+        });
+
+        const maxDist = Math.sqrt(Math.pow(rows, 2) + Math.pow(cols, 2));
+        const cleanupTime = (maxDist * 0.06 + 1.8) * 1000;
+
+        setTimeout(() => {
+          cells.forEach(c => {
+            c.classList.remove('wave');
+            c.style.animationDelay = '';
+          });
+        }, cleanupTime);
+      }
+
+      // Hover timer logic
+      function startHoverTimer(cell) {
+        if (hoverTimer) {
+          clearTimeout(hoverTimer);
+        }
+        if (waveInterval) {
+          clearInterval(waveInterval);
+          waveInterval = null;
+        }
+
+        currentHoveredCell = cell;
+        hoverTimer = setTimeout(() => {
+          if (currentHoveredCell === cell) {
+            triggerCircularWave(cell);
+
+            waveInterval = setInterval(() => {
+              if (currentHoveredCell === cell) {
+                triggerCircularWave(cell);
+              } else {
+                clearInterval(waveInterval);
+                waveInterval = null;
+              }
+            }, 10000);
+          }
+        }, 10000);
+      }
+
+      function stopHoverTimer() {
+        if (hoverTimer) {
+          clearTimeout(hoverTimer);
+          hoverTimer = null;
+        }
+        if (waveInterval) {
+          clearInterval(waveInterval);
+          waveInterval = null;
+        }
+        currentHoveredCell = null;
+      }
+
+      cells.forEach(cell => {
+        cell.addEventListener('mouseenter', () => {
+          startHoverTimer(cell);
+        });
+
+        cell.addEventListener('mouseleave', () => {
+          if (currentHoveredCell === cell) {
+            stopHoverTimer();
+          }
+        });
+      });
+
+      grid.addEventListener('mouseleave', () => {
+        stopHoverTimer();
+      });
+    })();
   </script>
 </body>
 </html>
