@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>pryvo · black</title>
+  <!-- modern, clean sans-serif with a touch of character -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <style>
+    /* reset & base */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background: #000000;
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.4;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      background-color: #000000;
+    }
+
+    /* main container – full viewport */
+    .landing {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 2rem 1.5rem;
+      text-align: left;
+      position: relative;
+      overflow: hidden;
+      background: #000000;
+    }
+
+    /* ---- interactive grid squares ---- */
+    .grid-squares {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(38px, 1fr));
+      grid-auto-rows: 38px;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.9;
+    }
+
+    .grid-squares .cell {
+      background: rgba(255, 255, 255, 0.03);
+      border-right: 1px solid rgba(255, 255, 255, 0.02);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+      transition: background-color 0.5s cubic-bezier(0.23, 1, 0.32, 1),
+                  box-shadow 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+      will-change: background-color, box-shadow;
+      pointer-events: auto;
+      cursor: default;
+    }
+
+    /* smooth fill to white on hover */
+    .grid-squares .cell:hover {
+      background-color: #ffffff;
+      box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.5);
+      transition: background-color 0.3s ease-out, box-shadow 0.3s ease-out;
+    }
+
+    /* ---- thin circular ring wave animation ---- */
+    @keyframes ringPulse {
+      0% {
+        background-color: rgba(255, 255, 255, 0.03);
+        box-shadow: inset 0 0 0 rgba(255, 255, 255, 0);
+        border-color: rgba(255, 255, 255, 0.02);
+      }
+      15% {
+        background-color: rgba(255, 255, 255, 0.15);
+        box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.4),
+                    0 0 4px rgba(255, 255, 255, 0.3);
+        border-color: rgba(255, 255, 255, 0.6);
+      }
+      35% {
+        background-color: rgba(255, 255, 255, 0.05);
+        box-shadow: inset 0 0 2px rgba(255, 255, 255, 0.1),
+                    0 0 1px rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.15);
+      }
+      100% {
+        background-color: rgba(255, 255, 255, 0.03);
+        box-shadow: inset 0 0 0 rgba(255, 255, 255, 0);
+        border-color: rgba(255, 255, 255, 0.02);
+      }
+    }
+
+    .grid-squares .cell.wave {
+      animation: ringPulse 1.8s ease-out forwards;
+    }
+
+    /* soft monochrome orbs (white / light gray glows) */
+    .glow {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.15;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .glow-1 {
+      width: 420px;
+      height: 420px;
+      background: #ffffff;
+      top: -120px;
+      right: -80px;
+    }
+
+    .glow-2 {
+      width: 380px;
+      height: 380px;
+      background: #cccccc;
+      bottom: -100px;
+      left: -60px;
+    }
+
+    .glow-3 {
+      width: 260px;
+      height: 260px;
+      background: #999999;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0.1;
+      filter: blur(100px);
+    }
+
+    /* brand logo — fixed to top left corner, right at the top */
+    .brand-logo-link {
+      position: absolute;
+      top: 0;
+      left: 2rem;
+      z-index: 10;
+      display: block;
+      height: clamp(4rem, 10vw, 7rem);
+      width: auto;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+      will-change: transform;
+      user-select: none;
+      opacity: 0.95;
+      cursor: pointer;
+      text-decoration: none;
+      outline: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .brand-logo-link:hover {
+      transform: scale(1.03);
+      opacity: 1;
+    }
+
+    .brand-logo {
+      display: block;
+      height: 100%;
+      width: auto;
+      filter: brightness(1) contrast(1);
+      user-select: none;
+      pointer-events: none;
+    }
+
+    .brand-logo-link:focus-visible {
+      outline: 2px solid rgba(255, 255, 255, 0.6);
+      outline-offset: 4px;
+      border-radius: 4px;
+    }
+
+    /* ===== central text + animated S curve ===== */
+    .center-message {
+      position: relative;
+      z-index: 5;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 0.1rem;
+      pointer-events: none;
+      user-select: none;
+      max-width: 90vw;
+      margin-left: 7rem;
+      margin-top: -6rem;
+      transform: translateY(-28px) scale(0.88);
+      transform-origin: left center;
+    }
+
+    .center-message h1 {
+      font-size: clamp(3.5rem, 15vw, 7rem);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: #ffffff;
+      line-height: 1.1;
+      text-shadow: 0 0 30px rgba(255, 255, 255, 0.15);
+      margin: 0;
+      padding: 0;
+      pointer-events: auto;
+      user-select: none;
+      white-space: nowrap;
+      animation: headingFadeIn 1s ease-out both;
+    }
+
+    @keyframes headingFadeIn {
+      0% { opacity: 0; transform: translateY(8px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .center-message .s-curve {
+      width: 100%;
+      max-width: 280px;
+      height: 18px;
+      display: block;
+      color: #ffffff;
+      opacity: 0.9;
+      filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.4));
+      pointer-events: none;
+      margin-left: 0;
+    }
+
+    .center-message .s-curve svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+
+    .center-message .s-curve path {
+      stroke-dasharray: 1000;
+      stroke-dashoffset: 1000;
+      animation: drawS 1.4s cubic-bezier(0.65, 0, 0.35, 1) 0.3s forwards;
+    }
+
+    @keyframes drawS {
+      0% {
+        stroke-dashoffset: 1000;
+        opacity: 0.3;
+      }
+      100% {
+        stroke-dashoffset: 0;
+        opacity: 1;
+      }
+    }
+
+    /* ===== tagline below the S curve ===== */
+    .tagline {
+      margin-top: 0.6rem;
+      font-size: clamp(0.8rem, 2.6vw, 1.25rem);
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      color: rgba(255, 255, 255, 0.7);
+      line-height: 1.3;
+      max-width: 320px;
+      pointer-events: auto;
+      user-select: none;
+      opacity: 0;
+      animation: fadeInTagline 1.2s ease-out 0.9s forwards;
+    }
+
+    @keyframes fadeInTagline {
+      0% { opacity: 0; transform: translateY(4px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== secondary message below the tagline ===== */
+    .tagline-secondary {
+      margin-top: 0.35rem;
+      font-size: clamp(0.72rem, 2.2vw, 1.05rem);
+      font-weight: 400;
+      letter-spacing: 0.015em;
+      color: rgba(255, 255, 255, 0.5);
+      line-height: 1.35;
+      max-width: 320px;
+      pointer-events: auto;
+      user-select: none;
+      opacity: 0;
+      animation: fadeInTagline 1.2s ease-out 1.25s forwards;
+    }
+
+    /* ===== signature below the secondary message ===== */
+    .signature {
+      margin-top: 0.4rem;
+      font-size: clamp(0.68rem, 2vw, 0.95rem);
+      font-weight: 400;
+      letter-spacing: 0.03em;
+      color: rgba(255, 255, 255, 0.35);
+      line-height: 1.3;
+      max-width: 320px;
+      pointer-events: auto;
+      user-select: none;
+      opacity: 0;
+      animation: fadeInTagline 1.2s ease-out 1.55s forwards;
+    }
+
+    /* ===== right-side column: image box + buttons ===== */
+    .right-column {
+      position: absolute;
+      right: 3rem;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 6;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      pointer-events: auto;
+      margin-top: -3rem;
+    }
+
+    /* ===== wide, slightly taller image box ===== */
+    .image-box {
+      position: relative;
+      width: clamp(360px, 48vw, 680px);
+      height: clamp(200px, 26vw, 340px);
+      /* Sharp square corners */
+      border-radius: 0;
+      overflow: hidden;
+      background: #0a0a0a;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 0 60px rgba(255, 255, 255, 0.06),
+                  0 20px 60px rgba(0, 0, 0, 0.6);
+      transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1),
+                  box-shadow 0.4s ease,
+                  border-color 0.4s ease;
+      opacity: 0;
+      animation: fadeInImageBox 1.2s ease-out 0.8s forwards;
+      pointer-events: auto;
+    }
+
+    .image-box:hover {
+      transform: scale(1.02);
+      border-color: rgba(255, 255, 255, 0.18);
+      box-shadow: 0 0 80px rgba(255, 255, 255, 0.1),
+                  0 24px 70px rgba(0, 0, 0, 0.7);
+    }
+
+    @keyframes fadeInImageBox {
+      0% { opacity: 0; transform: translateX(30px); }
+      100% { opacity: 1; transform: translateX(0); }
+    }
+
+    .image-box img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.92;
+      transition: opacity 0.4s ease, transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    .image-box:hover img {
+      opacity: 1;
+      transform: scale(1.03);
+    }
+
+    /* subtle inner vignette overlay */
+    .image-box::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(
+        ellipse at center,
+        transparent 50%,
+        rgba(0, 0, 0, 0.35) 100%
+      );
+      pointer-events: none;
+    }
+
+    /* ===== buttons row — closer together and moved up ===== */
+    .button-row {
+      display: flex;
+      flex-direction: row;
+      gap: 1.4rem;
+      width: 100%;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 0.6rem;
+    }
+
+    /* ===== slightly rounded buttons ===== */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.9rem 2.2rem;
+      font-family: 'Inter', sans-serif;
+      font-size: clamp(0.82rem, 1.3vw, 1rem);
+      font-weight: 500;
+      letter-spacing: 0.03em;
+      color: #000000;
+      background: #ffffff;
+      border: 1px solid #ffffff;
+      border-radius: 8px;
+      cursor: pointer;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: background 0.3s ease,
+                  color 0.3s ease,
+                  transform 0.25s cubic-bezier(0.23, 1, 0.32, 1),
+                  box-shadow 0.3s ease;
+      box-shadow: 0 0 0 rgba(255, 255, 255, 0);
+      opacity: 0;
+      animation: fadeInBtn 1.2s ease-out 1.1s forwards;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .btn:hover {
+      background: transparent;
+      color: #ffffff;
+      transform: translateY(-2px);
+      box-shadow: 0 0 30px rgba(255, 255, 255, 0.25),
+                  0 0 60px rgba(255, 255, 255, 0.1);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn:focus-visible {
+      outline: 2px solid rgba(255, 255, 255, 0.7);
+      outline-offset: 4px;
+    }
+
+    /* second button variant — outline */
+    .btn-outline {
+      background: transparent;
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      animation-delay: 1.3s;
+    }
+
+    .btn-outline:hover {
+      background: #ffffff;
+      color: #000000;
+      border-color: #ffffff;
+      box-shadow: 0 0 30px rgba(255, 255, 255, 0.25),
+                  0 0 60px rgba(255, 255, 255, 0.1);
+    }
+
+    @keyframes fadeInBtn {
+      0% { opacity: 0; transform: translateY(10px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    /* responsive tweaks */
+    @media (max-width: 1100px) {
+      .right-column {
+        right: 2rem;
+        margin-top: -2rem;
+      }
+      .image-box {
+        width: clamp(300px, 42vw, 500px);
+        height: clamp(170px, 24vw, 260px);
+      }
+      .button-row {
+        margin-top: 0.5rem;
+        gap: 1.2rem;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .right-column {
+        right: 1.5rem;
+        margin-top: -1.5rem;
+      }
+      .image-box {
+        width: clamp(260px, 38vw, 400px);
+        height: clamp(140px, 20vw, 200px);
+      }
+      .btn {
+        padding: 0.8rem 1.8rem;
+        font-size: 0.85rem;
+        border-radius: 7px;
+      }
+      .button-row {
+        margin-top: 0.4rem;
+        gap: 1rem;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .right-column {
+        position: relative;
+        right: auto;
+        top: auto;
+        transform: none;
+        margin: 2rem 0 0 4rem;
+        align-items: flex-start;
+      }
+      .image-box {
+        width: clamp(240px, 65vw, 360px);
+        height: clamp(130px, 30vw, 190px);
+        animation: fadeInImageBoxMobile 1.2s ease-out 0.8s forwards;
+      }
+      @keyframes fadeInImageBoxMobile {
+        0% { opacity: 0; transform: translateY(20px); }
+        100% { opacity: 1; transform: translateY(0); }
+      }
+      .button-row {
+        justify-content: flex-start;
+        margin-top: 0.3rem;
+        gap: 0.9rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .landing {
+        padding: 1.5rem 1rem;
+        align-items: flex-start;
+      }
+      .brand-logo-link {
+        top: 0;
+        left: 1rem;
+        height: 3rem;
+      }
+      .grid-squares {
+        grid-template-columns: repeat(auto-fill, minmax(32px, 1fr));
+        grid-auto-rows: 32px;
+      }
+      .center-message {
+        margin-left: 4rem;
+        margin-top: -4rem;
+        transform: translateY(-20px) scale(0.85);
+      }
+      .center-message h1 {
+        font-size: clamp(2.8rem, 18vw, 5rem);
+      }
+      .center-message .s-curve {
+        max-width: 200px;
+        height: 14px;
+      }
+      .tagline {
+        font-size: clamp(0.7rem, 3.2vw, 0.95rem);
+        max-width: 220px;
+        margin-top: 0.4rem;
+      }
+      .tagline-secondary {
+        font-size: clamp(0.62rem, 2.8vw, 0.85rem);
+        max-width: 220px;
+        margin-top: 0.25rem;
+      }
+      .signature {
+        font-size: clamp(0.58rem, 2.4vw, 0.78rem);
+        max-width: 220px;
+        margin-top: 0.3rem;
+      }
+      .right-column {
+        margin: 2rem 0 0 3rem;
+      }
+      .image-box {
+        width: clamp(200px, 70vw, 300px);
+        height: clamp(110px, 30vw, 160px);
+      }
+      .button-row {
+        flex-direction: column;
+        align-items: stretch;
+        margin-top: 0.2rem;
+        gap: 0.7rem;
+      }
+      .btn {
+        padding: 0.75rem 1.5rem;
+        font-size: 0.82rem;
+        width: 100%;
+        border-radius: 6px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="landing">
+    <!-- interactive grid squares -->
+    <div class="grid-squares" id="gridSquares"></div>
+
+    <!-- ambient monochrome glows -->
+    <div class="glow glow-1"></div>
+    <div class="glow glow-2"></div>
+    <div class="glow glow-3"></div>
+
+    <!-- brand logo pinned top-left, now a link to pryvo.uk -->
+    <a 
+      href="https://pryvo.uk" 
+      class="brand-logo-link"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="pryvo official website"
+    >
+      <img 
+        src="https://raw.githubusercontent.com/Pryvo-official/Pryvo/main/Pryvo_Logo.png" 
+        alt="pryvo" 
+        class="brand-logo"
+      >
+    </a>
+
+    <!-- ===== central text + animated S curve + taglines ===== -->
+    <div class="center-message">
+      <h1>Pryvo</h1>
+      <div class="s-curve" aria-hidden="true">
+        <svg viewBox="0 0 320 20" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M 0 10 
+                   C 80 -5, 160 25, 240 10 
+                   C 280 3, 300 17, 320 10" 
+                fill="none" 
+                stroke="currentColor" 
+                stroke-width="2.5" 
+                stroke-linecap="round" 
+                stroke-linejoin="round" />
+        </svg>
+      </div>
+      <p class="tagline">privacy is not a feature — it is a fundamental right.</p>
+      <p class="tagline-secondary">At Pryvo, we believe that all you do is yours and yours only</p>
+      <p class="signature">— pryvo team</p>
+    </div>
+
+    <!-- ===== right-side column: image box + buttons ===== -->
+    <div class="right-column">
+      <div class="image-box">
+        <img 
+          src="https://raw.githubusercontent.com/Pryvo-official/Pryvo/main/Images/Lock.png" 
+          alt="Pryvo lock" 
+        >
+      </div>
+      <div class="button-row">
+        <a 
+          href="https://chat.pryvo.uk" 
+          class="btn"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Start chatting with Pryvo"
+        >
+          Start Chatting
+        </a>
+        <a 
+          href="https://pryvo.uk" 
+          class="btn btn-outline"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Get the Pryvo app"
+        >
+          Get the App
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    (function() {
+      const grid = document.getElementById('gridSquares');
+      if (!grid) return;
+
+      const CELL_COUNT = 900;
+      const cells = [];
+      let waveInterval = null;
+      let hoverTimer = null;
+      let currentHoveredCell = null;
+
+      // Create cells
+      for (let i = 0; i < CELL_COUNT; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'cell';
+        cell.dataset.index = i;
+        grid.appendChild(cell);
+        cells.push(cell);
+      }
+
+      // --- Get grid dimensions dynamically ---
+      function getGridDimensions() {
+        const style = window.getComputedStyle(grid);
+        const cols = style.gridTemplateColumns.split(' ').length;
+        const rows = Math.ceil(cells.length / cols);
+        return { cols, rows };
+      }
+
+      // --- Thin circular ring wave from a specific cell ---
+      function triggerCircularWave(originCell) {
+        cells.forEach(c => {
+          c.classList.remove('wave');
+          c.style.animationDelay = '';
+        });
+
+        void grid.offsetWidth;
+
+        const originIndex = parseInt(originCell.dataset.index);
+        const { cols, rows } = getGridDimensions();
+
+        const originRow = Math.floor(originIndex / cols);
+        const originCol = originIndex % cols;
+
+        cells.forEach((cell, index) => {
+          const row = Math.floor(index / cols);
+          const col = index % cols;
+
+          const dist = Math.sqrt(
+            Math.pow(row - originRow, 2) + Math.pow(col - originCol, 2)
+          );
+
+          const delay = dist * 0.06;
+
+          cell.style.animationDelay = `${delay}s`;
+          cell.classList.add('wave');
+        });
+
+        const maxDist = Math.sqrt(Math.pow(rows, 2) + Math.pow(cols, 2));
+        const cleanupTime = (maxDist * 0.06 + 1.8) * 1000;
+
+        setTimeout(() => {
+          cells.forEach(c => {
+            c.classList.remove('wave');
+            c.style.animationDelay = '';
+          });
+        }, cleanupTime);
+      }
+
+      // --- Find the grid cell directly above the "P" in Pryvo and trigger the wave ---
+      function triggerRippleAboveP() {
+        const heading = document.querySelector('.center-message h1');
+        if (!heading) return;
+
+        const headingRect = heading.getBoundingClientRect();
+        const gridRect = grid.getBoundingClientRect();
+
+        const targetX = headingRect.left + 4;
+        const targetY = headingRect.top - 6;
+
+        const relX = targetX - gridRect.left;
+        const relY = targetY - gridRect.top;
+
+        let bestIndex = 0;
+        let bestDist = Infinity;
+
+        cells.forEach((cell, index) => {
+          const cellRect = cell.getBoundingClientRect();
+          const cx = cellRect.left + cellRect.width / 2 - gridRect.left;
+          const cy = cellRect.top + cellRect.height / 2 - gridRect.top;
+          const d = Math.sqrt(Math.pow(cx - relX, 2) + Math.pow(cy - relY, 2));
+          if (d < bestDist) {
+            bestDist = d;
+            bestIndex = index;
+          }
+        });
+
+        setTimeout(() => {
+          triggerCircularWave(cells[bestIndex]);
+        }, 350);
+      }
+
+      // --- Hover timer logic ---
+      function startHoverTimer(cell) {
+        if (hoverTimer) {
+          clearTimeout(hoverTimer);
+        }
+        if (waveInterval) {
+          clearInterval(waveInterval);
+          waveInterval = null;
+        }
+
+        currentHoveredCell = cell;
+        hoverTimer = setTimeout(() => {
+          if (currentHoveredCell === cell) {
+            triggerCircularWave(cell);
+
+            waveInterval = setInterval(() => {
+              if (currentHoveredCell === cell) {
+                triggerCircularWave(cell);
+              } else {
+                clearInterval(waveInterval);
+                waveInterval = null;
+              }
+            }, 10000);
+          }
+        }, 10000);
+      }
+
+      function stopHoverTimer() {
+        if (hoverTimer) {
+          clearTimeout(hoverTimer);
+          hoverTimer = null;
+        }
+        if (waveInterval) {
+          clearInterval(waveInterval);
+          waveInterval = null;
+        }
+        currentHoveredCell = null;
+      }
+
+      // Attach hover events to each cell
+      cells.forEach(cell => {
+        cell.addEventListener('mouseenter', () => {
+          startHoverTimer(cell);
+        });
+
+        cell.addEventListener('mouseleave', () => {
+          if (currentHoveredCell === cell) {
+            stopHoverTimer();
+          }
+        });
+      });
+
+      // Stop timer if mouse leaves the grid entirely
+      grid.addEventListener('mouseleave', () => {
+        stopHoverTimer();
+      });
+
+      // --- Measure the exact path length and set dasharray/dashoffset ---
+      const sPath = document.querySelector('.s-curve path');
+      if (sPath) {
+        try {
+          const length = sPath.getTotalLength();
+          sPath.style.strokeDasharray = length;
+          sPath.style.strokeDashoffset = length;
+          sPath.style.animation = 'none';
+          void sPath.getBoundingClientRect();
+          sPath.style.animation = `drawS 1.4s cubic-bezier(0.65, 0, 0.35, 1) 0.3s forwards`;
+
+          const keyframeName = 'drawS_' + Math.random().toString(36).substr(2, 9);
+          const keyframes = `
+            @keyframes ${keyframeName} {
+              0% { stroke-dashoffset: ${length}; opacity: 0.3; }
+              100% { stroke-dashoffset: 0; opacity: 1; }
+            }
+          `;
+          const styleEl = document.createElement('style');
+          styleEl.textContent = keyframes;
+          document.head.appendChild(styleEl);
+          sPath.style.animation = `${keyframeName} 1.4s cubic-bezier(0.65, 0, 0.35, 1) 0.3s forwards`;
+        } catch (e) {
+          console.warn('Could not measure path length, using fallback animation.', e);
+        }
+      }
+
+      // --- Fire the ripple above "P" when the page opens ---
+      if (document.readyState === 'complete') {
+        triggerRippleAboveP();
+      } else {
+        window.addEventListener('load', triggerRippleAboveP);
+      }
+
+    })();
+  </script>
+</body>
+</html>
